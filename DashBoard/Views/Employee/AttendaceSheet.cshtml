@@ -1,0 +1,105 @@
+﻿@model List<DATA.Domains.Employee>
+@{
+    var alert = (DashBoard.Models.Alerts)TempData["alert"];
+
+    string alertType = string.Empty;
+    string alertMessage = string.Empty;
+
+    if (alert != null)
+    {
+        alertType = alert.AlertType;
+        alertMessage = alert.AlertMessage;
+    }
+    var attendance = (List<DATA.Domains.Attendance>)TempData["lastAttendance"];
+}
+<body>
+    <main>
+        <div class="container-fluid">
+            @if (alertType == "error")
+            {
+                <div class="alert alert-danger" role="alert">
+                    <strong>@alertType!</strong>  @alertMessage
+                </div>
+            }
+            @if (alertType == "success")
+            {
+                var item = Model.FirstOrDefault();
+                {
+                    <div class="alert alert-primary" role="alert">
+                        <strong>@alertType!</strong>  @alertMessage
+                    </div>
+                }
+            }
+            <!-- START: Breadcrumbs-->
+            <div class="row ">
+                <div class="col-12  align-self-center">
+                    <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
+                        <div class="w-sm-100 mr-auto"><h4 class="mb-0">Attendance</h4></div>
+                        <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                            <li class="breadcrumb-item">Attendance</li>
+                            <li class="breadcrumb-item">Sheet</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            @*END: Breadcrumbs*@
+            <div class="row">
+                <div class="col-12 col-sm-12 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                    <table id="myTable" class="display table dataTable table-striped table-bordered" role="grid" aria-describedby="example_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 150px;">Employee Name </th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Availability: activate to sort column ascending" style="width: 100px;">Department</th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Availability: activate to sort column ascending" style="width: 20px;">Presenet</th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 20px;">Absent</th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 100px;">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                var now = @DateTime.Now.Date;
+                                                <form method="post" action="~/employee/MarkAttendace">
+                                                    <input name="EmployeeId" value="@item.Id" type="hidden" />
+                                                    <tr role="row" class="odd">
+                                                        <td><input name="EmployeeName" value="@item.FirstName @item.LastName" type="hidden" />@item.FirstName @item.LastName</td>
+                                                        <td>@item.Department.DepartmentName</td>
+                                                        <td><input type="checkbox" name="IsPresenet" value="true" /></td>
+                                                        <td><input type="checkbox" name="IsAbsent" value="true" /></td>
+                                                        @if (attendance.Any())
+                                                        {
+                                                            foreach (var att in attendance)
+                                                            {
+                                                                if (att.Date.Date == now)
+                                                                {
+                                                                    <td><button type="submit" disabled id="@att.Id">Save</button></td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td><button type="submit">Save</button></td>
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <td><button type="submit">Save</button></td>
+                                                        }
+                                                    </tr>
+                                                </form>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+

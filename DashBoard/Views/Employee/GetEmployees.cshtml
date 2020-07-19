@@ -1,0 +1,202 @@
+﻿@model List<DATA.Domains.Employee>
+@{
+    var alert = (DashBoard.Models.Alerts)TempData["alert"];
+
+    string alertType = string.Empty;
+    string alertMessage = string.Empty;
+
+    if (alert != null)
+    {
+        alertType = alert.AlertType;
+        alertMessage = alert.AlertMessage;
+    }
+    int counter = 0;
+}
+<body>
+    <main>
+        <div class="container-fluid">
+            @if (alertType == "error")
+            {
+                <div class="alert alert-danger" role="alert">
+                    <strong>@alertType!</strong>  @alertMessage
+                </div>
+            }
+            @if (alertType == "success")
+            {
+                <div class="alert alert-primary" role="alert">
+                    <strong>@alertType!</strong>  @alertMessage
+                </div>
+            }
+            <!-- START: Breadcrumbs-->
+            <div class="row ">
+                <div class="col-12  align-self-center">
+                    <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
+                        <div class="w-sm-100 mr-auto"><h4 class="mb-0">Search</h4></div>
+
+                        <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                            <li class="breadcrumb-item">Employee</li>
+                            <li class="breadcrumb-item">Search</li>
+
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            @*END: Breadcrumbs*@
+            <div class="row">
+                <div class="col-12 col-sm-12 mt-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                    <table id="myTable" class="display table dataTable table-striped table-bordered" role="grid" aria-describedby="example_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 30px;">#</th>
+                                                <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 150px;">Name </th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Cost: activate to sort column ascending" style="width: 100px;">Phone No</th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Availability: activate to sort column ascending" style="width: 100px;">Cnic No</th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Availability: activate to sort column ascending" style="width: 100px;">Department</th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Availability: activate to sort column ascending" style="width: 100px;">Date Of Join</th>
+                                                <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 150px;">Action</th>
+
+                                            </tr>
+                                            <tr>
+                                                <th scope="col"><i class="icon-magnifier"></i></th>
+                                                <th scope="col"><input class="form-control" id="name" onkeyup="SearchName()" /></th>
+                                                <th scope="col"><input class="form-control" id="phoneno" onkeyup="SearchPhoneNo()" /></th>
+                                                <th scope="col"><input class="form-control" id="CnicNo" onkeyup="SearchCnic()" /></th>
+                                                <th scope="col"><input class="form-control" id="department" onkeyup="Searcdepartment()" style="width:100px" /></th>
+                                                <th scope="col"><input class="form-control" id="date" onkeyup="Searchbydate()" style="width:100px" /></th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in Model)
+                                            {
+
+                                                counter++;
+                                                <tr role="row" class="odd">
+                                                    <td>@counter</td>
+                                                    <td>@item.FirstName @item.LastName</td>
+                                                    <td>@item.CellNo</td>
+                                                    <td>@item.CNIC</td>
+                                                    <td>@item.Department.DepartmentName</td>
+                                                    <td>@item.CreatedOn.ToShortDateString()</td>
+                                                    <td>
+                                                        <a class="btn btn-warning rounded-btn" href="~/employee/edit/@item.Id"><i class="icon-pencil"></i></a>
+                                                        <a class="btn btn-warning rounded-btn" href="~/employee/Delete/@item.Id"><i class="icon-trash"></i></a>
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+
+<script>
+    function SearchName() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("name");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function SearchPhoneNo() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("phoneno");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    function SearchCnic() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("CnicNo");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+
+    function Searcdepartment() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("department");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[4];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function Searchbydate() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("date");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[5];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>

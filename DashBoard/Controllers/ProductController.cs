@@ -46,6 +46,11 @@ namespace DashBoard.Controllers
             return RedirectToAction("Product");
         }
 
+        public ActionResult GetProducts()
+        {
+            return View();
+        }
+
         #endregion
 
         #region private
